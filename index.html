@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Diwali</title>
+<meta name="description" content="A Diwali wish, lit just for you.">
+<meta property="og:title" content="Happy Diwali! A light is waiting for you">
+<meta property="og:description" content="Tap to light the diya and open your Diwali wish.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0e0b22">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&family=Yatra+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0e0b22; --plum:#2b1247; --marigold:#ffb627; --rose:#ff4d79;
+  --ember:#ff7a2f; --cream:#fff1d6; --muted:#d9c7e8;
+  --display:'Yatra One','Noto Sans Devanagari',Georgia,serif;
+  --body:'Mukta','Noto Sans Devanagari',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:var(--body);color:var(--cream);background:var(--night);
+  background-image:radial-gradient(120% 70% at 50% 0%,var(--plum) 0%,var(--night) 65%);
+  background-attachment:fixed;overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+}
+#stars{position:fixed;top:0;left:0;width:2px;height:2px;border-radius:50%;z-index:0;animation:twinkle 5s ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.35}to{opacity:.9}}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+
+/* ---------- diya ---------- */
+.diya{display:block;width:100%;height:auto;overflow:visible}
+.diya *{transform-box:fill-box}
+.ign{transform-origin:50% 100%;transition:opacity .9s ease,transform .9s cubic-bezier(.2,1.4,.4,1)}
+.flame{transform-origin:50% 100%;animation:flick 1.3s ease-in-out infinite alternate}
+.glow{transition:opacity 1s ease}
+@keyframes flick{0%{transform:scale(1,.94) skewX(-2deg)}50%{transform:scale(.96,1.06) skewX(2deg)}100%{transform:scale(1.03,.98) skewX(-1deg)}}
+.unlit .ign{opacity:0;transform:scale(.2)}
+.unlit .glow{opacity:0}
+
+/* ---------- intro ---------- */
+#intro{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem;text-align:center;
+  background:radial-gradient(100% 60% at 50% 55%,#2b1247 0%,var(--night) 70%);transition:opacity 1.2s ease .2s,visibility 0s 1.4s}
+#intro.gone{opacity:0;visibility:hidden;pointer-events:none}
+#intro h1{font-family:var(--display);font-weight:400;font-size:clamp(1.6rem,6.5vw,2.6rem);line-height:1.3;max-width:16ch;overflow-wrap:anywhere}
+#intro p{color:var(--muted);font-size:1.05rem}
+#lightBtn{background:none;border:0;cursor:pointer;width:min(58vw,230px);padding:1rem;border-radius:50%;position:relative}
+#lightBtn::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--marigold);opacity:0;animation:ring 2.2s ease-out infinite}
+#lightBtn.done::after{animation:none}
+@keyframes ring{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.25);opacity:0}}
+
+/* ---------- card ---------- */
+main{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2.5rem 1.25rem calc(8rem + env(safe-area-inset-bottom));opacity:0;transition:opacity .6s}
+body.on main{opacity:1}
+.hello{font-family:var(--display);font-weight:400;font-size:clamp(3.2rem,16vw,7.5rem);line-height:1.35;color:var(--cream);
+  text-shadow:0 0 28px rgba(255,182,39,.55),0 0 80px rgba(255,77,121,.35)}
+.en{font-family:var(--display);font-size:clamp(1.3rem,5vw,2rem);color:var(--marigold);letter-spacing:.04em;margin-top:.25rem}
+.dear{font-family:var(--display);font-size:clamp(1.4rem,5.5vw,2.2rem);margin-top:2rem;overflow-wrap:anywhere;max-width:20ch}
+.msg{max-width:34ch;margin-top:.9rem;font-size:clamp(1.05rem,3.8vw,1.25rem);line-height:1.65;color:var(--muted);overflow-wrap:anywhere}
+.from{margin-top:1.25rem;font-family:var(--display);font-size:1.25rem;color:var(--rose)}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-top:2rem}
+.btn{font:600 1rem var(--body);border-radius:999px;padding:.8rem 1.4rem;cursor:pointer;border:1.5px solid var(--marigold);color:var(--marigold);background:rgba(14,11,34,.55);transition:transform .15s,background .15s;text-decoration:none;display:inline-block}
+.btn:hover{background:rgba(255,182,39,.12)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--marigold);color:#2a1500}
+.btn.primary:hover{background:#ffc654}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--cream);outline-offset:3px}
+
+body.on .reveal{animation:rise .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.18s + .1s)}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+
+#row{position:fixed;left:0;right:0;bottom:0;z-index:3;display:flex;justify-content:center;align-items:flex-end;gap:clamp(.6rem,3vw,1.6rem);
+  padding:0 1rem calc(.8rem + env(safe-area-inset-bottom));pointer-events:none;
+  background:linear-gradient(to top,rgba(14,11,34,.95),rgba(14,11,34,0));opacity:0;transition:opacity 1s .6s}
+body.on #row{opacity:1}
+#row div{width:clamp(44px,13vw,76px)}
+#row div:nth-child(even){margin-bottom:.35rem}
+
+/* ---------- creator sheet ---------- */
+#sheet{position:fixed;z-index:20;left:0;right:0;bottom:0;max-height:92svh;overflow:auto;background:#1a0f33;border-top:2px solid var(--marigold);
+  border-radius:22px 22px 0 0;padding:1.4rem 1.25rem calc(1.4rem + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(0,0,0,.6);
+  transform:translateY(110%);transition:transform .5s cubic-bezier(.2,.9,.3,1);visibility:hidden}
+#sheet.open{transform:none;visibility:visible}
+#sheet .in{max-width:30rem;margin:0 auto}
+#sheet h2{font-family:var(--display);font-weight:400;font-size:1.5rem}
+#sheet .sub{color:var(--muted);margin:.3rem 0 1rem;font-size:.98rem}
+label{display:block;font-weight:600;font-size:.95rem;margin:.8rem 0 .3rem}
+input,textarea{width:100%;font:400 1.05rem var(--body);color:var(--cream);background:rgba(255,255,255,.06);border:1.5px solid rgba(255,182,39,.35);border-radius:12px;padding:.7rem .85rem}
+input::placeholder,textarea::placeholder{color:#9c8bb3}
+textarea{resize:vertical;min-height:4.2rem}
+#out{font-size:.9rem;color:var(--marigold)}
+.sheetbtns{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+#close{float:right;background:none;border:0;color:var(--muted);font-size:1.6rem;line-height:1;cursor:pointer;padding:.2rem .5rem}
+#toast{position:fixed;z-index:30;left:50%;top:1rem;transform:translate(-50%,-150%);background:var(--marigold);color:#2a1500;font-weight:600;padding:.6rem 1.1rem;border-radius:999px;transition:transform .35s}
+#toast.show{transform:translate(-50%,0)}
+
+@media (min-width:700px){
+  #sheet{left:50%;right:auto;bottom:auto;top:50%;width:min(32rem,92vw);border:2px solid var(--marigold);border-radius:22px;transform:translate(-50%,-40%) scale(.96);opacity:0}
+  #sheet.open{transform:translate(-50%,-50%);opacity:1}
+}
+@media (prefers-reduced-motion:reduce){
+  .flame,#stars,#lightBtn::after{animation:none}
+  body.on .reveal{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- shared gradients for every diya -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gBowl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a04b"/><stop offset="1" stop-color="#a1431c"/></linearGradient>
+    <linearGradient id="gFlame" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff6a1a"/><stop offset=".6" stop-color="#ffb627"/><stop offset="1" stop-color="#fff3b0"/></linearGradient>
+    <radialGradient id="gGlow"><stop offset="0" stop-color="#ffb627" stop-opacity=".55"/><stop offset="1" stop-color="#ffb627" stop-opacity="0"/></radialGradient>
+  </defs>
+</svg>
+
+<div id="stars" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<section id="intro" aria-live="polite">
+  <h1 id="introTitle">A light is waiting for you</h1>
+  <button id="lightBtn" class="unlit" aria-label="Light the diya"></button>
+  <p>Tap the diya to light it</p>
+</section>
+
+<main>
+  <div class="hello reveal" style="--i:0" lang="hi">शुभ दीपावली</div>
+  <div class="en reveal" style="--i:1">Happy Diwali</div>
+  <div class="dear reveal" style="--i:2" id="dear">Dear friend,</div>
+  <p class="msg reveal" style="--i:3" id="msg"></p>
+  <div class="from reveal" style="--i:4" id="from" hidden></div>
+  <div class="actions reveal" style="--i:5">
+    <button class="btn primary" id="more">Light up the sky</button>
+    <button class="btn" id="make">Send your own wish</button>
+  </div>
+</main>
+
+<div id="row" aria-hidden="true"></div>
+
+<section id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="in">
+    <button id="close" aria-label="Close">×</button>
+    <h2 id="sheetTitle">Make a Diwali wish</h2>
+    <p class="sub">Add a name, then share the link. They will see their own wish.</p>
+    <label for="iTo">Their name</label>
+    <input id="iTo" maxlength="40" autocomplete="off" placeholder="e.g. Priya">
+    <label for="iFrom">Your name</label>
+    <input id="iFrom" maxlength="40" autocomplete="off" placeholder="e.g. Abhi (optional)">
+    <label for="iMsg">Your message</label>
+    <textarea id="iMsg" maxlength="240" placeholder="Leave empty to use the default wish"></textarea>
+    <label for="out">Your link</label>
+    <input id="out" readonly>
+    <div class="sheetbtns">
+      <button class="btn primary" id="copy" disabled>Copy link</button>
+      <a class="btn" id="wa" target="_blank" rel="noopener" aria-disabled="true">Share on WhatsApp</a>
+      <button class="btn" id="prev" disabled>Preview</button>
+    </div>
+  </div>
+</section>
+<div id="toast" role="status"></div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clean = (s,n) => (s||'').replace(/\s+/g,' ').trim().slice(0,n);
+
+  /* ---- read the link ---- */
+  const q = new URLSearchParams(location.search);
+  const to = clean(q.get('to')||q.get('name'),40);
+  const from = clean(q.get('from'),40);
+  const custom = clean(q.get('msg'),240);
+  const defaultMsg = "May the light of the diyas fill your home with joy, your days with good fortune and your heart with peace. Wishing you and your family a bright and happy Diwali.";
+
+  $('msg').textContent = custom || defaultMsg;
+  if (to){
+    $('dear').textContent = 'Dear ' + to + ',';
+    $('introTitle').textContent = 'A light is waiting for you, ' + to;
+    document.title = 'Happy Diwali, ' + to + '!';
+  }
+  if (from){ $('from').hidden = false; $('from').textContent = 'With love, ' + from; }
+
+  /* ---- diya markup ---- */
+  const diya = (cls) => `
+  <svg class="diya ${cls||''}" viewBox="0 0 120 120" aria-hidden="true">
+    <circle class="glow" cx="60" cy="42" r="56" fill="url(#gGlow)"/>
+    <g class="ign"><path class="flame" d="M60 8 C72 26 78 38 60 56 C42 38 48 26 60 8Z" fill="url(#gFlame)"/>
+      <path class="flame" d="M60 30 C65 38 66 44 60 52 C54 44 55 38 60 30Z" fill="#fff8d6" opacity=".9"/></g>
+    <rect x="57.5" y="52" width="5" height="12" rx="2" fill="#3a1a0a"/>
+    <path d="M6 64 Q60 52 114 64 Q104 106 60 108 Q16 106 6 64Z" fill="url(#gBowl)"/>
+    <path d="M6 64 Q60 52 114 64 Q60 74 6 64Z" fill="#ffd27a" opacity=".55"/>
+    <g fill="#ffe29a"><circle cx="32" cy="84" r="2.4"/><circle cx="46" cy="90" r="2.4"/><circle cx="60" cy="92" r="2.4"/><circle cx="74" cy="90" r="2.4"/><circle cx="88" cy="84" r="2.4"/></g>
+  </svg>`;
+  $('lightBtn').innerHTML = diya();
+  const row = $('row');
+  for (let i=0;i<7;i++){ const d=document.createElement('div'); d.innerHTML=diya(); d.firstElementChild.querySelectorAll('.flame').forEach(f=>f.style.animationDelay=(i*0.23)+'s'); row.appendChild(d); }
+
+  /* ---- stars ---- */
+  (function(){
+    const s=[]; for(let i=0;i<70;i++){ const a=(.25+Math.random()*.6).toFixed(2); s.push(`${Math.random()*100}vw ${Math.random()*100}vh 0 ${Math.random()<.2?1:0}px rgba(255,241,214,${a})`); }
+    $('stars').style.boxShadow = s.join(',');
+  })();
+
+  /* ---- fireworks ---- */
+  const c=$('fx'), x=c.getContext('2d');
+  let W,H,dpr, running=false;
+  const rockets=[], parts=[];
+  const palette=[[255,182,39],[255,77,121],[255,230,160],[255,122,47],[190,130,255],[90,220,200]];
+  function resize(){ dpr=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; x.setTransform(dpr,0,0,dpr,0,0); }
+  addEventListener('resize',resize); resize();
+
+  function launch(tx,ty){
+    rockets.push({x: tx ?? W*(.15+Math.random()*.7), y:H, ty: ty ?? H*(.12+Math.random()*.38), v:7+Math.random()*2.5, col:palette[Math.random()*palette.length|0]});
+  }
+  function explode(r){
+    const n = W<600 ? 70 : 110, ring = Math.random()<.35;
+    const alt = palette[Math.random()*palette.length|0];
+    for(let i=0;i<n;i++){
+      const a=Math.PI*2*i/n + Math.random()*.1, sp = ring ? 4.2 : Math.random()*5+1;
+      parts.push({x:r.x,y:r.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,decay:.008+Math.random()*.01,col:Math.random()<.3?alt:r.col,sz:1.2+Math.random()*1.4});
+    }
+  }
+  function frame(){
+    requestAnimationFrame(frame);
+    x.globalCompositeOperation='destination-out'; x.fillStyle='rgba(0,0,0,.2)'; x.fillRect(0,0,W,H);
+    x.globalCompositeOperation='lighter';
+    for(let i=rockets.length-1;i>=0;i--){
+      const r=rockets[i]; r.y-=r.v; r.v*=.992;
+      x.fillStyle=`rgb(${r.col})`; x.beginPath(); x.arc(r.x,r.y,2,0,6.3); x.fill();
+      if(r.y<=r.ty||r.v<2.2){ explode(r); rockets.splice(i,1); }
+    }
+    for(let i=parts.length-1;i>=0;i--){
+      const p=parts[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=.045; p.vx*=.985; p.vy*=.985; p.life-=p.decay;
+      if(p.life<=0){ parts.splice(i,1); continue; }
+      x.fillStyle=`rgba(${p.col[0]},${p.col[1]},${p.col[2]},${p.life})`;
+      x.beginPath(); x.arc(p.x,p.y,p.sz*p.life+.3,0,6.3); x.fill();
+    }
+  }
+  frame();
+  function volley(n){ for(let i=0;i<n;i++) setTimeout(()=>launch(),i*320); }
+  setInterval(()=>{ if(running && !document.hidden && !reduced) launch(); },1500);
+  document.addEventListener('pointerdown',e=>{
+    if(!running || e.target.closest('button,a,input,textarea,#sheet')) return;
+    launch(e.clientX, Math.min(e.clientY, H*.6));
+  });
+  $('more').addEventListener('click',()=>volley(7));
+
+  /* ---- start ---- */
+  function start(){ document.body.classList.add('on'); running=true; volley(5); }
+  const intro=$('intro'), btn=$('lightBtn');
+
+  /* ---- creator ---- */
+  const sheet=$('sheet'), iTo=$('iTo'), iFrom=$('iFrom'), iMsg=$('iMsg'), out=$('out'), copy=$('copy'), wa=$('wa'), prev=$('prev');
+  function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1800); }
+  function build(){
+    const n=clean(iTo.value,40), f=clean(iFrom.value,40), m=clean(iMsg.value,240);
+    if(!n){ out.value=''; copy.disabled=prev.disabled=true; wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true'); wa.style.opacity=.45; return; }
+    const p=new URLSearchParams({to:n}); if(f)p.set('from',f); if(m)p.set('msg',m);
+    const url=location.origin+location.pathname+'?'+p.toString();
+    out.value=url; copy.disabled=prev.disabled=false; wa.style.opacity=1; wa.removeAttribute('aria-disabled');
+    wa.href='https://wa.me/?text='+encodeURIComponent('Happy Diwali, '+n+'! 🪔 I made something for you: '+url);
+  }
+  [iTo,iFrom,iMsg].forEach(el=>el.addEventListener('input',build));
+  copy.addEventListener('click',async()=>{
+    try{ await navigator.clipboard.writeText(out.value); }catch(e){ out.select(); document.execCommand('copy'); }
+    toast('Link copied');
+  });
+  prev.addEventListener('click',()=>window.open(out.value,'_blank','noopener'));
+  wa.addEventListener('click',e=>{ if(wa.getAttribute('aria-disabled')) e.preventDefault(); });
+  const openSheet=()=>{ sheet.classList.add('open'); setTimeout(()=>iTo.focus({preventScroll:true}),400); };
+  const closeSheet=()=>sheet.classList.remove('open');
+  $('make').addEventListener('click',openSheet);
+  $('close').addEventListener('click',closeSheet);
+  addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
+  build();
+
+  if (to){
+    btn.addEventListener('click',()=>{
+      btn.classList.remove('unlit'); btn.classList.add('done');
+      setTimeout(()=>{ intro.classList.add('gone'); start(); },1300);
+    },{once:true});
+  } else {
+    /* no name in the link: you are the sender, so open the wish maker */
+    intro.remove(); start(); setTimeout(openSheet,900);
+  }
+})();
+</script>
+</body>
+</html>
